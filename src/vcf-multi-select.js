@@ -193,7 +193,7 @@ class VcfMultiSelectElement extends
   }
 
   static get version() {
-    return '1.1.0';
+    return '1.0.1';
   }
 
   static get properties() {
