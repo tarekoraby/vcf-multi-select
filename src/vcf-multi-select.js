@@ -161,7 +161,7 @@ class VcfMultiSelectElement extends
       }
 
       [part="value-postfix"] {
-         font-size: var(--lumo-font-size-s);
+         font-size: var(--lumo-font-size-xxs);
          padding-left: 0.5em;
          opacity: 0.5;
       }
