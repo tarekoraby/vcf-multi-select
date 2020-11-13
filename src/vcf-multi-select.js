@@ -160,6 +160,12 @@ class VcfMultiSelectElement extends
         font-family: "vcf-multi-select-icons";
       }
 
+      [part="value-postfix"] {
+         font-size: var(--lumo-font-size-s);
+         padding-left: 0.5em;
+         opacity: 0.5;
+      }
+
       [part="toggle-button"]::before {
         content: "\\e900";
       }
@@ -589,13 +595,21 @@ class VcfMultiSelectElement extends
   }
 
   /** @private */
-  _updateTextField(newText) {
+  _updateTextField(newTextContent) {
     if (!this._labelItem){
-        this._labelItem = document.createElement('vaadin-item');
-        this._labelItem.removeAttribute('tabindex');
-        this._labelItem.removeAttribute('role');
+      this._labelItem = document.createElement('vaadin-item');
+      this._labelItem.removeAttribute('tabindex');
+      this._labelItem.removeAttribute('role');
     }
-    this._labelItem.textContent = newText;
+    this._labelItem.textContent = newTextContent.mainValue;
+
+    if (newTextContent.valuePostfix) {
+      let span = document.createElement('span');
+      span.innerText = newTextContent.valuePostfix;
+      span.setAttribute('part', "value-postfix");
+      this._labelItem.appendChild(span);
+    }
+
     this._labelItem.selected = true;
     this._valueElement.appendChild(this._labelItem);    
   }
@@ -610,13 +624,22 @@ class VcfMultiSelectElement extends
 
   /** @private */
   _getTextContent(selectedIndexes){
-      let newText = this._items[selectedIndexes[0]].value;
+      let mainValue = this._items[selectedIndexes[0]].value;
+      let valuePostfix;
+
       const remainder = selectedIndexes.length - 1;
       if (remainder > 0) {
-          newText += " (+" + remainder + " other)";
+        valuePostfix = "(+" + remainder + " other";
+        if (remainder > 1) {
+          valuePostfix += "s";
+        }
+        valuePostfix += ")";
       }
 
-      return newText;
+      return {
+        mainValue: mainValue,
+        valuePostfix: valuePostfix,
+      };
   }
 
   /** @private */
@@ -624,9 +647,6 @@ class VcfMultiSelectElement extends
     this._valueElement.innerHTML = '';
 
     const selectedIndexes = this._menuElement.selectedValues;
-
-      console.log("XXXXXX");
-      console.log(this._menuElement.selectedValues);
 
     const hasContent = this._hasContent(selectedIndexes);
 
@@ -642,8 +662,8 @@ class VcfMultiSelectElement extends
     }
 
     if (hasContent){
-        const newText = this._getTextContent(selectedIndexes);
-        this._updateTextField(newText);
+        const newTextContent = this._getTextContent(selectedIndexes);
+        this._updateTextField(newTextContent);
     }
       
 
