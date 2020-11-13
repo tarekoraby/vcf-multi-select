@@ -37,9 +37,12 @@ $_documentContainer.innerHTML = `<custom-style>
 document.head.appendChild($_documentContainer.content);
 /**
  *
- * `<vcf-multi-select>` is a Web Component for selecting values from a list of items. The content of the
- * the select can be populated in two ways: imperatively by using renderer callback function and
- * declaratively by using Polymer's Templates.
+ * `<vcf-multi-select>` is a Web Component for selecting multiple values from a list of items.
+ * While only the first selected value is displayed in the field, the number of additionally 
+ * selcted values (N) is indicated as "(+N other(s))".
+ * 
+ * The content of the the select can be populated in two ways: imperatively by using renderer 
+ * callback function and declaratively by using Polymer's Templates.
  *
  * ### Rendering
  *
@@ -101,6 +104,7 @@ document.head.appendChild($_documentContainer.content);
  * Part name | Description
  * ----------------|----------------
  * `toggle-button` | The toggle button
+ * `value-postfix` | The span indicating the number of additional selected values
  *
  * The following state attributes are available for styling:
  *
