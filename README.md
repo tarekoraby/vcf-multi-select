@@ -1,5 +1,6 @@
-# &lt;vcf-multi-select&gt;
+# vcf-multi-select
 
+A select element (similar to vaadin-select) that supports selecting multiple items
 
 
 
