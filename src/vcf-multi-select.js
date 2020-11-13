@@ -164,15 +164,16 @@ class VcfMultiSelectElement extends
         font-family: "vcf-multi-select-icons";
       }
 
+      [part="toggle-button"]::before {
+        content: "\\e900";
+      }
+
       [part="value-postfix"] {
          font-size: var(--lumo-font-size-xxs);
          padding-left: 0.5em;
          opacity: 0.5;
       }
 
-      [part="toggle-button"]::before {
-        content: "\\e900";
-      }
     </style>
 
     <vcf-multi-select-text-field placeholder="[[placeholder]]" label="[[label]]" required="[[required]]" invalid="[[invalid]]" error-message="[[errorMessage]]" readonly\$="[[readonly]]" helper-text="[[helperText]]" theme\$="[[theme]]">
