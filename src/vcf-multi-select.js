@@ -200,7 +200,7 @@ class VcfMultiSelectElement extends
   }
 
   static get version() {
-    return '1.0.3';
+    return '1.0.4';
   }
 
   static get properties() {
@@ -349,7 +349,7 @@ class VcfMultiSelectElement extends
 
   static get observers() {
     return [
-      '_updateSelectedIndexes(indexes, _items)',
+      '_updateSelectedIndexes(selectedIndexes, _items)',
       '_updateAriaExpanded(opened, _toggleElement, _inputElement)',
       '_templateOrRendererChanged(_contentTemplate, renderer, _overlayElement)',
       '_selectedIndexesChanged(selectedIndexes.*)'
@@ -761,6 +761,7 @@ class VcfMultiSelectElement extends
    * Fired when the user commits a value change.
    *
    * @event change
+   * @event selected-indexes-changed
    */
 }
 
