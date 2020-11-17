@@ -636,7 +636,7 @@ class VcfMultiSelectElement extends
 
   /** @private */
   _getTextContent(selectedIndexes){
-      let mainValue = this._items[selectedIndexes[0]].value;
+      let mainValue = this._items[selectedIndexes[0]].innerText;
       let valuePostfix;
 
       const remainder = selectedIndexes.length - 1;
