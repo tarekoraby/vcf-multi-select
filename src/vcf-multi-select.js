@@ -200,7 +200,7 @@ class VcfMultiSelectElement extends
   }
 
   static get version() {
-    return '1.0.2';
+    return '1.0.3';
   }
 
   static get properties() {
@@ -636,7 +636,7 @@ class VcfMultiSelectElement extends
 
   /** @private */
   _getTextContent(selectedIndexes){
-      let mainValue = this._items[selectedIndexes[0]].value;
+      let mainValue = this._items[selectedIndexes[0]].innerText;
       let valuePostfix;
 
       const remainder = selectedIndexes.length - 1;
