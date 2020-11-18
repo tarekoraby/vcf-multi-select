@@ -105,7 +105,6 @@
   "files": [
     "src",
     "vcf-*.js",
-    "*.js",
     "theme"
   ],
   "homepage": "https://github.com/vaadin-component-factory/vcf-multi-select#readme",
