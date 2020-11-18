@@ -52,9 +52,6 @@ Add `<vcf-multi-select>` element to the page.
 
 This is the client-side (Polymer 3) web component. If you are looking for the server-side (Java) API for the Vaadin Platform, it can be found here: [VcfMultiSelect](https://vaadin.com/directory/component/VcfMultiSelect) -->
 
-## Vaadin Pro
-
-This component is available in the Vaadin Pro subscription. It is still open source, but you need to have a valid CVAL license in order to use it. Read more at: [Pricing](https://vaadin.com/pricing)
 
 ## License
 
