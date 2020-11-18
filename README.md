@@ -1,4 +1,6 @@
 # vcf-multi-select
+[![npm version](https://badgen.net/npm/v/@vaadin-component-factory/vcf-enhanced-dialog)](https://www.npmjs.com/package/@vaadin-component-factory/vcf-enhanced-dialog)
+[![Published on Vaadin Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/vaadin-component-factoryvcf-enhanced-dialog)
 
 A select element (similar to vaadin-select) that supports selecting multiple items
 
