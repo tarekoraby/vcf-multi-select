@@ -9,7 +9,7 @@ import '@vaadin/vaadin-item/theme/lumo/vaadin-item.js';
 import '@vaadin/vaadin-list-box/theme/lumo/vaadin-list-box.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
-const $_documentContainer = html`<dom-module id="lumo-select" theme-for="vcf-multi-select">
+const $_documentContainer = html`<dom-module id="lumo-multi-select" theme-for="vcf-multi-select">
   <template>
     <style include="lumo-field-button">
       :host {
@@ -50,7 +50,7 @@ const $_documentContainer = html`<dom-module id="lumo-select" theme-for="vcf-mul
       }
     </style>
   </template>
-</dom-module><dom-module id="lumo-select-text-field" theme-for="vcf-multi-select-text-field">
+</dom-module><dom-module id="lumo-multi-select-text-field" theme-for="vcf-multi-select-text-field">
   <template>
     <style>
       :host([theme~="align-center"]) ::slotted([part~="value"]) {
@@ -98,7 +98,7 @@ const $_documentContainer = html`<dom-module id="lumo-select" theme-for="vcf-mul
       }
     </style>
   </template>
-</dom-module><dom-module id="lumo-select-overlay" theme-for="vcf-multi-select-overlay">
+</dom-module><dom-module id="lumo-multi-select-overlay" theme-for="vcf-multi-select-overlay">
   <template>
     <style include="lumo-menu-overlay">
       :host {
