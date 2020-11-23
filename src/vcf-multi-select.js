@@ -200,7 +200,7 @@ class VcfMultiSelectElement extends
   }
 
   static get version() {
-    return '1.0.8';
+    return '1.1.0';
   }
 
   static get properties() {
@@ -311,6 +311,17 @@ class VcfMultiSelectElement extends
         type: Boolean,
         value: false,
         reflectToAttribute: true
+      },
+
+      /**
+       * Array of Strings used to indicate the number of additionally selected items.
+       * The first String is used when there is a single additional item. The second 
+       * is used when there two or more additional items are selected.
+       * @type {Array}
+       */
+      extraItemsCountText: {
+        type: Array,
+        value: () => ["other", "others"]
       },
 
       /** @private */
@@ -500,6 +511,14 @@ class VcfMultiSelectElement extends
     }
   }
 
+  setExtraItemsCountText(singularString, pluralString){
+    this.extraItemsCountText = [singularString, pluralString];
+  }
+
+  getExtraItemsCountText(){
+    return this.extraItemsCountText;
+  }
+
   /** @private */
   _requiredChanged(required) {
     this.setAttribute('aria-required', required);
@@ -641,9 +660,11 @@ class VcfMultiSelectElement extends
 
       const remainder = selectedIndexes.length - 1;
       if (remainder > 0) {
-        valuePostfix = "(+" + remainder + " other";
-        if (remainder > 1) {
-          valuePostfix += "s";
+        valuePostfix = "(+" + remainder + " " ;
+        if (remainder == 1) {
+          valuePostfix += this.extraItemsCountText[0];
+        } else {
+          valuePostfix += this.extraItemsCountText[1];
         }
         valuePostfix += ")";
       }
