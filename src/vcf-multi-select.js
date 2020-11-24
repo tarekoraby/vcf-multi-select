@@ -513,6 +513,7 @@ class VcfMultiSelectElement extends
 
   setExtraItemsCountText(singularString, pluralString){
     this.extraItemsCountText = [singularString, pluralString];
+    this._updateValueSlot();
   }
 
   getExtraItemsCountText(){
