@@ -98,13 +98,13 @@
 
       <h1 slot="header" class="hidden"><code class="main">&lt;vcf-multi-select&gt;</code></h1>
 
-      <vcf-anchor-nav-section name="Example">
+      <vcf-anchor-nav-section name="Default select">
         <demo-snippet>
           <template>
-            <vcf-multi-select></vcf-multi-select>
+            <vcf-multi-select id="defaultSelect"></vcf-multi-select>
             <script>
                   window.addEventListener('WebComponentsReady', function() {
-                    document.querySelector('vcf-multi-select').renderer = function(root) {
+                    document.querySelector('#defaultSelect').renderer = function(root) {
                       // Check if there is a list-box generated with the previous renderer call to update its content instead of recreation
                       if (root.firstChild) {
                         return;
@@ -113,6 +113,33 @@
                       const listBox = window.document.createElement('vaadin-list-box');
                       // append 3 <vaadin-item> elements
                       ['Jose', 'Manolo', 'Pedro'].forEach(function(name) {
+                        const item = window.document.createElement('vaadin-item');
+                        item.textContent = name;
+                        listBox.appendChild(item);
+                      });
+                      // update the content
+                      root.appendChild(listBox);
+                    };
+                  });
+            </script>
+          </template>
+        </demo-snippet>
+      </vcf-anchor-nav-section>
+	  <vcf-anchor-nav-section name="Display-all-selected">
+        <demo-snippet>
+          <template>
+            <vcf-multi-select id="displayAllSelect" display-all-selected></vcf-multi-select>
+            <script>
+                  window.addEventListener('WebComponentsReady', function() {
+                    document.querySelector('#displayAllSelect').renderer = function(root) {
+                      // Check if there is a list-box generated with the previous renderer call to update its content instead of recreation
+                      if (root.firstChild) {
+                        return;
+                      }
+                      // create the <vaadin-list-box>
+                      const listBox = window.document.createElement('vaadin-list-box');
+                      // append 4 <vaadin-item> elements
+                      ['Jose', 'Manolo', 'Pedro', 'Luis'].forEach(function(name) {
                         const item = window.document.createElement('vaadin-item');
                         item.textContent = name;
                         listBox.appendChild(item);
