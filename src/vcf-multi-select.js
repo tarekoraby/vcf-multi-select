@@ -45,8 +45,11 @@ document.head.appendChild($_documentContainer.content);
 /**
  *
  * `<vcf-multi-select>` is a Web Component for selecting multiple values from a list of items.
- * While only the first selected value is displayed in the field, the number of additionally 
- * selcted values (N) is indicated as "(+N other(s))".
+ * 
+ * By default, only the first selected value is displayed in the field, with the number of 
+ * additionally selcted values (N) is indicated as "(+N other(s))". This behavior can be changed
+ * by setting the displayAllSelected property to true, in which case all selected items will be
+ * displayed, comma-separated, with ellipsis if more items are present than fits the component.
  * 
  * The content of the the select can be populated in two ways: imperatively by using renderer 
  * callback function and declaratively by using Polymer's Templates.
@@ -122,6 +125,7 @@ document.head.appendChild($_documentContainer.content);
  * `focused` | Set when the element is focused | :host
  * `focus-ring` | Set when the element is keyboard focused | :host
  * `readonly` | Set when the select is read only | :host
+ * `display-all-selected` | Set when all selected items are shown, comma-separated, rather than being abbreviated (the default) | :host
  *
  * `<vcf-multi-select>` element sets these custom CSS properties:
  *
@@ -181,6 +185,15 @@ class VcfMultiSelectElement extends
          opacity: 0.5;
       }
 
+      :host([display-all-selected]) [part="value"] {        
+         --_lumo-text-field-overflow-mask-image: none;
+      }
+      
+      :host([display-all-selected]) [part="value"] vaadin-item {
+         display: block;
+         overflow: hidden;
+      }
+
     </style>
 
     <vcf-multi-select-text-field placeholder="[[placeholder]]" label="[[label]]" required="[[required]]" invalid="[[invalid]]" error-message="[[errorMessage]]" readonly\$="[[readonly]]" helper-text="[[helperText]]" theme\$="[[theme]]">
@@ -200,7 +213,7 @@ class VcfMultiSelectElement extends
   }
 
   static get version() {
-    return '1.1.0';
+    return '1.2.0';
   }
 
   static get properties() {
@@ -314,9 +327,30 @@ class VcfMultiSelectElement extends
       },
 
       /**
+       * If set to true, all selected items will shown comma-separated.
+       * 
+       * When set to false (default), it specifies that after the first selected item,
+       * additional selected items will be abbreviated (showing only the number of 
+       * additonally selected items between brackets). 
+       * 
+       * See also extraItemsCountText property.
+       * 
+       * @type {boolean}
+       */
+      displayAllSelected: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        observer: '_displayAllSelectedChanged'
+      },
+
+      /**
        * Array of Strings used to indicate the number of additionally selected items.
        * The first String is used when there is a single additional item. The second 
        * is used when there two or more additional items are selected.
+       * 
+       * This property has an effect only when displayAllSelected is false.
+       * 
        * @type {Array}
        */
       extraItemsCountText: {
@@ -513,7 +547,9 @@ class VcfMultiSelectElement extends
 
   setExtraItemsCountText(singularString, pluralString){
     this.extraItemsCountText = [singularString, pluralString];
-    this._updateValueSlot();
+    if (!this.displayAllSelected){
+      this._updateValueSlot();
+    }
   }
 
   getExtraItemsCountText(){
@@ -523,6 +559,13 @@ class VcfMultiSelectElement extends
   /** @private */
   _requiredChanged(required) {
     this.setAttribute('aria-required', required);
+  }
+
+  /** @private */
+  _displayAllSelectedChanged(displayAllSelected) {
+    if (this._valueElement && this.selectedIndexes.length > 0) {
+      this._updateValueSlot();
+    }
   }
 
   /** @private */
@@ -627,7 +670,40 @@ class VcfMultiSelectElement extends
   }
 
   /** @private */
-  _updateTextField(newTextContent) {
+  _updateTextField(selectedIndexes) {
+    if (!this.displayAllSelected) {
+      const newTextContentAbbreviated =  this._getTextContentAbbreviated(selectedIndexes);
+      this._updateTextFieldAsAbbreviated(newTextContentAbbreviated);
+    } else {
+      const newTextContentAll = this._getTextContentAll(selectedIndexes);
+      this._updateTextFieldAsAll(newTextContentAll);
+    }  
+  }
+
+  /** @private */
+  _getTextContentAbbreviated(selectedIndexes){
+    let mainValue = this._items[selectedIndexes[0]].innerText;
+    let valuePostfix;
+
+    const remainder = selectedIndexes.length - 1;
+    if (remainder > 0) {
+    valuePostfix = "(+" + remainder + " " ;
+    if (remainder == 1) {
+        valuePostfix += this.extraItemsCountText[0];
+    } else {
+        valuePostfix += this.extraItemsCountText[1];
+    }
+    valuePostfix += ")";
+    }
+
+    return {
+    mainValue: mainValue,
+    valuePostfix: valuePostfix,
+    };
+  }
+
+  /** @private */
+  _updateTextFieldAsAbbreviated(newTextContent) {
     if (!this._labelItem){
       this._labelItem = document.createElement('vaadin-item');
       this._labelItem.removeAttribute('tabindex');
@@ -647,33 +723,37 @@ class VcfMultiSelectElement extends
   }
 
   /** @private */
+  _getTextContentAll(selectedIndexes){
+    let arrValues = [];
+    for (let i = 0; i < selectedIndexes.length; i++) {
+        arrValues.push(this._items[selectedIndexes[i]].innerText);
+    }
+    return arrValues.join(", ");
+  }
+
+  /** @private */
+  _updateTextFieldAsAll(newTextContent) {
+    if (!this._labelItem){
+      this._labelItem = document.createElement('vaadin-item');
+      this._labelItem.removeAttribute('tabindex');
+      this._labelItem.removeAttribute('role');
+    }
+    this._labelItem.textContent = newTextContent;
+
+    this._labelItem.selected = true;
+    this._valueElement.appendChild(this._labelItem);
+
+    let itemStyle = this._labelItem.shadowRoot.querySelector('[part = content]').style;
+    itemStyle.setProperty('text-overflow', 'ellipsis');
+    itemStyle.setProperty('overflow', 'hidden');
+  }
+
+  /** @private */
   _updateAriaExpanded(opened, toggleElement, inputElement) {
     toggleElement && toggleElement.setAttribute('aria-expanded', opened);
     if (inputElement && inputElement.focusElement) {
       inputElement.focusElement.setAttribute('aria-expanded', opened);
     }
-  }
-
-  /** @private */
-  _getTextContent(selectedIndexes){
-      let mainValue = this._items[selectedIndexes[0]].innerText;
-      let valuePostfix;
-
-      const remainder = selectedIndexes.length - 1;
-      if (remainder > 0) {
-        valuePostfix = "(+" + remainder + " " ;
-        if (remainder == 1) {
-          valuePostfix += this.extraItemsCountText[0];
-        } else {
-          valuePostfix += this.extraItemsCountText[1];
-        }
-        valuePostfix += ")";
-      }
-
-      return {
-        mainValue: mainValue,
-        valuePostfix: valuePostfix,
-      };
   }
 
   /** @private */
@@ -696,8 +776,7 @@ class VcfMultiSelectElement extends
     }
 
     if (hasContent){
-        const newTextContent = this._getTextContent(selectedIndexes);
-        this._updateTextField(newTextContent);
+        this._updateTextField(selectedIndexes);
     }
       
 
